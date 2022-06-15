@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+  nginx: 
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./proxy.conf:/etc/nginx/includes/proxy.conf
+    ports:
+      - 80:80
+
+  memcached:
+    container_name: memcached
+    image: memcached:latest
+    restart: always
+    ports:
+        - 11211:11211
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.3
+    restart: always
+    ports:
+     - 3306:3306
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=cmotest
+      - TZ=UTC
+      
+  redis:
+    container_name: redis
+    image: redislabs/redisearch:latest
+    restart: always
+    ports:
+     - 6379:6379
+    volumes:
+      - redis_data:/data
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=0
+      - PMA_HOST=mariadb
+      - UPLOAD_LIMIT=512M
+      - MAX_EXECUTION_TIME=9999999
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+     
+  php74:
+    container_name: php74
+    image: php-custom74
+    restart: always
+    build:
+      context: .
+      dockerfile: .docker7.4/Dockerfile
+    volumes:
+      - ./www:/var/www/html
+      - ./vhost7.4.conf:/etc/apache2/sites-available/000-default.conf
+    environment:
+      - TZ=Europe/London
+    env_file:
+      - .env
+ 
+volumes:
+  mariadb_data:
+  redis_data:
