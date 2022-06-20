@@ -18,6 +18,7 @@
   `date_time_created` datetime NOT NULL,
   PRIMARY KEY (`error_page_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `errors` (
   `error_id` int(11) NOT NULL AUTO_INCREMENT,
   `error_page_id` int(11) NOT NULL,
@@ -30,12 +31,14 @@ CREATE TABLE `errors` (
   KEY `fk_errors_error_pages_idx` (`error_page_id`),
   CONSTRAINT `fk_errors_error_pages` FOREIGN KEY (`error_page_id`) REFERENCES `error_pages` (`error_page_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `ip_addresses` (
   `ip_address_id` int(11) NOT NULL AUTO_INCREMENT,
   `ip_address` varchar(39) NOT NULL,
   PRIMARY KEY (`ip_address_id`),
   UNIQUE KEY `ip_address_UNIQUE` (`ip_address`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `user_agents` (
   `user_agent_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_agent` varchar(2000) NOT NULL,
@@ -51,6 +54,8 @@ CREATE TABLE `vat_history` (
   `vat_rate` decimal(11,2) NOT NULL,
   PRIMARY KEY (`vat_history_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
 14. If all the tables have been created create a trigger for the vat_history table by running the query below
 15. CREATE DEFINER=`root`@`%` TRIGGER `cmo`.`vat_history_BEFORE_INSERT` BEFORE INSERT ON `vat_history` FOR EACH ROW
 BEGIN
